@@ -1,6 +1,6 @@
 ;; Copyright © 2016, JUXT LTD.
 
-(ns pull.core
+(ns juxt.pull.core
   (:require
    [clojure.walk :refer [postwalk]]))
 
