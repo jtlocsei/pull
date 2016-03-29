@@ -22,15 +22,24 @@
 
 (defn pull
   "Take a query, and some state. Return a map."
-  [query state]
-  (reduce (fn [acc prop]
-            (cond
-              (keyword? prop) (conj acc (denormalize (find state prop) state))
-              (join? prop) (conj acc (let [[k q] (first prop)]
-                                       [k (pull q (get state k))]))
-              :otherwise acc))
-          {}
-          query))
+  ([global local query]
+   (reduce (fn [acc prop]
+             (cond
+               (= '* prop)
+               (merge acc
+                      (reduce-kv (fn [acc k v] (assoc acc k (denormalize v global))) {} local))
+               
+               (or (string? prop) (keyword? prop))
+               (conj acc (denormalize (find local prop) global))
+
+               (join? prop) (conj acc (let [[k q] (first prop)]
+                                        [k (pull global (get local k) q)]))
+               :otherwise acc))
+           {}
+           query))
+
+  ([local query]
+   (pull local local query)))
 
 
 
