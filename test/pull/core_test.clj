@@ -39,4 +39,4 @@
     (testing "apply f for transform attribute"
       (is (= {:docs [{:name-len 5} {:name-len 5}]}
              (pull data [{:docs [:name-len]}]
-                   {:docs {:name-len #(count (:name %))}}))))))
+                   {:shadow {:name-len #(count (:name %))}}))))))
