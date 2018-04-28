@@ -28,22 +28,20 @@
                (= '* prop)
                (merge acc
                       (reduce-kv (fn [acc k v] (assoc acc k (denormalize v global))) {} local))
-               
+
                (or (string? prop) (keyword? prop))
                (conj acc (denormalize (find local prop) global))
 
-               (join? prop) (conj acc (let [[k q] (first prop)]
-                                        [k (pull global (get local k) q)]))
+               (join? prop)
+               (conj acc (let [[k q] (first prop)]
+                           (let [v (get local k)]
+                             (if (and (sequential? v)
+                                      (every? map? v))
+                               {k (mapv #(pull global % q) v)}
+                               [k (pull global v q)]))))
                :otherwise acc))
            {}
            query))
 
   ([local query]
    (pull local local query)))
-
-
-
-
-
-
-
