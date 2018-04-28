@@ -18,4 +18,4 @@
   ([data query]
    (pull data query nil))
   ([data query opts]
-   (impl/pull data data query shadow)))
+   (impl/pull data data query opts)))
