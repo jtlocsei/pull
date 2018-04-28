@@ -8,6 +8,7 @@
 
    - :shadow a shadow attributes map
    - :stealth a stealth attributes set
+   - :no-wildcard? wildcard will be ignored
 
   the shadow attributes map defines attributes not really exists,
   but can be calculated by a function takes a single argument (parent data),

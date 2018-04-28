@@ -46,4 +46,9 @@
                      {:name-len 2 :author "renewdoit"}]}
              (pull data [{:docs [:name-len :author :password]}]
                    {:shadow {:name-len #(count (:name %))}
-                    :stealth #{:password}}))))))
+                    :stealth #{:password}}))))
+
+    (testing "no-wildcard?"
+      (is (= {:name "pull" :docs [{} {}]}
+             (pull data [:name {:docs '[*]}]
+                   {:no-wildcard? true}))))))

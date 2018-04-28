@@ -21,12 +21,16 @@
   (and (map? p) (= (count p) 1)))
 
 (defn pull
-  ([global local query {:keys [shadow stealth] :as opts}]
+  ([global local query {:keys [shadow stealth no-wildcard?] :as opts}]
    (reduce (fn [acc prop]
              (cond
                (= '* prop)
-               (merge acc
-                      (reduce-kv (fn [acc k v] (assoc acc k (denormalize v global))) {} local))
+               (if no-wildcard?
+                 acc
+                 (merge acc
+                        (reduce-kv
+                         (fn [acc k v]
+                           (assoc acc k (denormalize v global))) {} local)))
 
                (or (string? prop) (keyword? prop))
                (if-not (get stealth prop)
