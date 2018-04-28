@@ -34,4 +34,9 @@
 
     (testing "from many attributes"
       (is (= {:docs [{:name "hello"} {:name "world"}]}
-             (pull data [{:docs [:name]}]))))))
+             (pull data [{:docs [:name]}]))))
+
+    (testing "apply f for transform attribute"
+      (is (= {:docs [{:name-len 5} {:name-len 5}]}
+             (pull data [{:docs [:name-len]}]
+                   {:docs {:name-len #(count (:name %))}}))))))
