@@ -12,8 +12,8 @@
               :vhosts {"http://localhost:8080" ^:ref [:routes :main]
                        "https://localhost:8443" ^:ref [:routes :main]
                        "https://localhost:8000" ^:ref [:routes :other]}
-              :docs [{:name "hello" :title "from the planet"}
-                     {:name "world" :title "I do not know"}]
+              :docs [{:name "hello" :author "juxt" :password "secret"}
+                     {:name "ok" :author "renewdoit"}]
               :server {:port 8080
                        :vhosts [^:ref [:vhosts "http://localhost:8080"]]}}]
 
@@ -33,10 +33,17 @@
              (count (:vhosts (pull data [{:vhosts ['*]}]))))))
 
     (testing "from many attributes"
-      (is (= {:docs [{:name "hello"} {:name "world"}]}
+      (is (= {:docs [{:name "hello"} {:name "ok"}]}
              (pull data [{:docs [:name]}]))))
 
     (testing "apply f for transform attribute"
-      (is (= {:docs [{:name-len 5} {:name-len 5}]}
+      (is (= {:docs [{:name-len 5} {:name-len 2}]}
              (pull data [{:docs [:name-len]}]
-                   {:shadow {:name-len #(count (:name %))}}))))))
+                   {:shadow {:name-len #(count (:name %))}}))))
+
+    (testing "stealth"
+      (is (= {:docs [{:name-len 5 :author "juxt"}
+                     {:name-len 2 :author "renewdoit"}]}
+             (pull data [{:docs [:name-len :author :password]}]
+                   {:shadow {:name-len #(count (:name %))}
+                    :stealth #{:password}}))))))

@@ -21,7 +21,7 @@
   (and (map? p) (= (count p) 1)))
 
 (defn pull
-  ([global local query {:keys [shadow] :as opts}]
+  ([global local query {:keys [shadow stealth] :as opts}]
    (reduce (fn [acc prop]
              (cond
                (= '* prop)
@@ -29,9 +29,11 @@
                       (reduce-kv (fn [acc k v] (assoc acc k (denormalize v global))) {} local))
 
                (or (string? prop) (keyword? prop))
-               (if-let [shadow-fn (get shadow prop)]
-                 (conj acc [prop (shadow-fn local)])
-                 (conj acc (denormalize (find local prop) global)))
+               (if-not (get stealth prop)
+                 (if-let [shadow-fn (get shadow prop)]
+                   (conj acc [prop (shadow-fn local)])
+                   (conj acc (denormalize (find local prop) global)))
+                 acc)
 
                (join? prop)
                (conj acc (let [[k q] (first prop)]
