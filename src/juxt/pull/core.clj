@@ -18,5 +18,12 @@
   returned data as if non-exists, perfectly for sensitive data."
   ([data query]
    (pull data query nil))
-  ([data query opts]
+  ([data query
+    {:keys [shadow stealth no-wildcard?]
+     :or {shadow {}
+          stealth #{}
+          no-wildcard? false}
+     :as opts}]
+   (when shadow (assert (map? shadow) (every? fn? (vals shadow))))
+   (when stealth (assert (set? stealth)))
    (impl/pull data data query opts)))
