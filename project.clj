@@ -1,4 +1,4 @@
-(defproject renewdoit/pull "0.2.0-SNAPSHOT"
+(defproject juxt/pull "0.2.0-SNAPSHOT"
   :description "Trees from tables"
   :url "http://github.com/juxt/pull"
   :license {:name "The MIT License"
