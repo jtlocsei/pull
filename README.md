@@ -48,6 +48,44 @@ Note that the state contains references, indicated with the metadata tag `^:ref`
 
 Joins (sub-queries) are also supported by providing a map in place of a keyword in a query.
 
+## Nested maps of sequence
+
+If a value is a sequence (sequential?) of map, query inside will return a vector of values, just like in Datomic's pull api.
+
+```clojure
+(pull {:person/name "Joe" :person/childen [{:person/name "Bob"} {:person/name "Alice"}]}
+      [:person/name {:person/children [:person/name]}])
+
+;;=> {:person/name "Joe" :person/children [{:person/name "Bod"} {:person/name "Alice"}]}
+```
+
+## Shadow attributes (values)
+
+You can define attributes (values) not exists but calculated by the value of the map, they are shadow attributes:
+
+```clojure
+(pull {:person/name "Joe" :person/childen [{:person/name "Bob"} {:person/name "Alice"}]}
+      [:person/name :person/num-kids]
+      {:shadow {:person/num-kids #(-> % :person/children count)}})
+
+;;=> {:person/name "Joe" :person/num-kids 2}
+```
+
+## Stealth (invisible) attributes
+
+By defining stealth sets of keys, you can make some of the keys invisible.
+
+```clojure
+(pull {:user/name "foo" :user/password "secret"} [:user/name :user/password]
+      {:stealth #{:user/password}})
+
+;;=> {:user/name "foo"}
+```
+
+## Wildcard
+
+Just like Datomic's pull API, you can use `'*` to get all attributes of a map. You can also turns it off by specific `:no-wildcard true` in the options map.
+
 ## References
 
 - David Nolen's Euro Clojure talk in 2014 in Krakow.

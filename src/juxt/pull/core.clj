@@ -1,49 +1,29 @@
-;; Copyright © 2016, JUXT LTD.
-
 (ns juxt.pull.core
   (:require
-   [clojure.walk :refer [postwalk]]))
-
-(defn- denormalize*
-  [v state]
-  (if (:ref (meta v))
-    (postwalk #(denormalize* % state) (get-in state v))
-    v))
-
-(defn denormalize
-  "Take a value, and some state. Walk the value, replacing any idents
-  by looking up their values in the state. Do this recursively to
-  create a tree."
-  [v state]
-  (postwalk #(denormalize* % state) v))
-
-(defn join? [p]
-  (and (map? p) (= (count p) 1)))
+   [juxt.pull.core.impl :as impl]))
 
 (defn pull
-  "Take a query, and some state. Return a map."
-  ([global local query]
-   (reduce (fn [acc prop]
-             (cond
-               (= '* prop)
-               (merge acc
-                      (reduce-kv (fn [acc k v] (assoc acc k (denormalize v global))) {} local))
-               
-               (or (string? prop) (keyword? prop))
-               (conj acc (denormalize (find local prop) global))
+  "Take a query, and some state. Return a map.
+  Optionally opts is map, which can have kv pairs:
 
-               (join? prop) (conj acc (let [[k q] (first prop)]
-                                        [k (pull global (get local k) q)]))
-               :otherwise acc))
-           {}
-           query))
+   - :shadow a shadow attributes map
+   - :stealth a stealth attributes set
+   - :no-wildcard? wildcard will be ignored
 
-  ([local query]
-   (pull local local query)))
+  the shadow attributes map defines attributes not really exists,
+  but can be calculated by a function takes a single argument (parent data),
+  returns a value as the attribute value.
 
-
-
-
-
-
-
+  all key inside stealth attributes set will not appeared in the
+  returned data as if non-exists, perfectly for sensitive data."
+  ([data query]
+   (pull data query nil))
+  ([data query
+    {:keys [shadow stealth no-wildcard?]
+     :or {shadow {}
+          stealth #{}
+          no-wildcard? false}
+     :as opts}]
+   (when shadow (assert (map? shadow) (every? fn? (vals shadow))))
+   (when stealth (assert (set? stealth)))
+   (impl/pull data data query opts)))
