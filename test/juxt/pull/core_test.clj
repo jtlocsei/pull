@@ -12,8 +12,6 @@
               :vhosts {"http://localhost:8080" ^:ref [:routes :main]
                        "https://localhost:8443" ^:ref [:routes :main]
                        "https://localhost:8000" ^:ref [:routes :other]}
-              :docs [{:name "hello" :author "juxt" :password "secret"}
-                     {:name "ok" :author "renewdoit"}]
               :server {:port 8080
                        :vhosts [^:ref [:vhosts "http://localhost:8080"]]}}]
 
@@ -30,34 +28,43 @@
 
     (testing "wildcard"
       (is (= 3
-             (count (:vhosts (pull data [{:vhosts ['*]}]))))))
+             (count (:vhosts (pull data [{:vhosts ['*]}]))))))))
 
-    (testing "from many attributes"
-      (is (= {:docs [{:name "hello"} {:name "ok"}]}
-             (pull data [{:docs [:name]}]))))
+(deftest sequential-map-attributes-test
+  (testing "from many attributes"
+    (is (= {:docs [{:name "hello"} {:name "ok"}]}
+           (pull {:docs [{:name "hello"} {:name "ok"}]}
+                 [{:docs [:name]}])))))
 
-    (testing "shadow attributes"
-      (is (= {:docs [{:name-len 5} {:name-len 2}]}
-             (pull data [{:docs [:name-len]}]
-                   {:shadow {:name-len #(count (:name %))}}))))
+(deftest no-wildcard?-option-test
+  (testing "no-wildcard? will not pull any attributes"
+    (is (= {:name "pull" :docs [{} {}]}
+           (pull {:name "pull" :docs [{:name "ok"} {:name "hello"}]}
+                 [:name {:docs '[*]}]
+                 {:no-wildcard? true})))))
 
-    (testing "deep shadow attributes"
-      (is (= {:tags [{:name "foo"} {:name "bar"}]}
-             (pull data [{:tags [:name]}]
-                   {:shadow
-                    {:tags
-                     (fn [_]
-                       [{:name "foo" :value "none"}
-                        {:name "bar"}])}}))))
+(deftest shadow-attributes-test
+  (testing "shadow attributes"
+    (is (= {:docs [{:name-len 5} {:name-len 2}]}
+           (pull {:docs [{:name "smart"} {:name "ok"}]}
+                 [{:docs [:name-len]}]
+                 {:shadow {:name-len #(count (:name %))}}))))
 
-    (testing "stealth"
-      (is (= {:docs [{:name-len 5 :author "juxt"}
-                     {:name-len 2 :author "renewdoit"}]}
-             (pull data [{:docs [:name-len :author :password]}]
-                   {:shadow {:name-len #(count (:name %))}
-                    :stealth #{:password}}))))
+  (testing "deep shadow attributes"
+    (is (= {:tags [{:name "foo"} {:name "bar"}]}
+           (pull {}
+                 [{:tags [:name]}]
+                 {:shadow
+                  {:tags
+                   (fn [_]
+                     [{:name "foo" :value "none"}
+                      {:name "bar"}])}})))))
 
-    (testing "no-wildcard?"
-      (is (= {:name "pull" :docs [{} {}]}
-             (pull data [:name {:docs '[*]}]
-                   {:no-wildcard? true}))))))
+(deftest stealth-attibutes-test
+  (testing "stealth"
+    (is (= {:docs [{:author "juxt"}
+                   {:author "renewdoit"}]}
+           (pull {:docs [{:author "juxt" :password "secret"} {:author "renewdoit"}]}
+                 [{:docs [:author :password]}]
+                 {:stealth #{:password}})))))
+
