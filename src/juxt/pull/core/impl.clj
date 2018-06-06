@@ -20,6 +20,23 @@
 (defn join? [p]
   (and (map? p) (= (count p) 1)))
 
+(declare pull)
+
+(defn local-find
+  [shadow local k]
+  (if-let [shadow-fn (get shadow k)]
+    [k (shadow-fn local)]
+    (find local k)))
+
+(defn join-prop
+  [prop local global opts]
+  (let [[k q] (first prop)
+        v     (second (local-find (:shadow opts) local k))]
+    (if (and (sequential? v)
+             (every? map? v))
+      {k (mapv #(pull global % q opts) v)}
+      [k (pull global v q opts)])))
+
 (defn pull
   ([global local query {:keys [shadow stealth no-wildcard?] :as opts}]
    (reduce (fn [acc prop]
@@ -34,18 +51,12 @@
 
                (or (string? prop) (keyword? prop))
                (if-not (get stealth prop)
-                 (if-let [shadow-fn (get shadow prop)]
-                   (conj acc [prop (shadow-fn local)])
-                   (conj acc (denormalize (find local prop) global)))
+                 (let [kv (local-find shadow local prop)]
+                   (conj acc (denormalize kv global)))
                  acc)
 
                (join? prop)
-               (conj acc (let [[k q] (first prop)]
-                           (let [v (get local k)]
-                             (if (and (sequential? v)
-                                      (every? map? v))
-                               {k (mapv #(pull global % q opts) v)}
-                               [k (pull global v q opts)]))))
+               (conj acc (join-prop prop local global opts))
                :otherwise acc))
            {}
            query)))

@@ -36,10 +36,19 @@
       (is (= {:docs [{:name "hello"} {:name "ok"}]}
              (pull data [{:docs [:name]}]))))
 
-    (testing "apply f for transform attribute"
+    (testing "shadow attributes"
       (is (= {:docs [{:name-len 5} {:name-len 2}]}
              (pull data [{:docs [:name-len]}]
                    {:shadow {:name-len #(count (:name %))}}))))
+
+    (testing "deep shadow attributes"
+      (is (= {:tags [{:name "foo"} {:name "bar"}]}
+             (pull data [{:tags [:name]}]
+                   {:shadow
+                    {:tags
+                     (fn [_]
+                       [{:name "foo" :value "none"}
+                        {:name "bar"}])}}))))
 
     (testing "stealth"
       (is (= {:docs [{:name-len 5 :author "juxt"}
