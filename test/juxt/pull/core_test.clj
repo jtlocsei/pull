@@ -41,6 +41,11 @@
     (is (= {:name "pull" :docs [{} {}]}
            (pull {:name "pull" :docs [{:name "ok"} {:name "hello"}]}
                  [:name {:docs '[*]}]
+                 {:no-wildcard? true}))))
+  (testing "for plain map attributes, no-wildcard? also prevent their pulling"
+    (is (= {:docs [{} {}]}
+           (pull {:docs [{:name "ok"} {:name "hello"}]}
+                 [:docs]
                  {:no-wildcard? true})))))
 
 (deftest shadow-attributes-test
