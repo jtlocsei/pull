@@ -41,7 +41,7 @@
 (defn join-prop
   [prop local global opts]
   (let [[k q] (first prop)]
-    (pullv global [k (second (local-find local k opts))] q opts)))
+    (pullv global (local-find local k opts) q opts)))
 
 (defn wildcard
   [global ^java.util.Map local opts]
