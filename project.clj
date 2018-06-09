@@ -1,4 +1,4 @@
-(defproject juxt/pull "0.2.0"
+(defproject juxt/pull "0.2.1"
   :description "Trees from tables"
   :url "http://github.com/juxt/pull"
   :license {:name "The MIT License"

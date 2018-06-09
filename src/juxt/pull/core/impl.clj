@@ -28,11 +28,12 @@
     (if-let [shadow-fn (get shadow k)]
       [k (shadow-fn local)]
       (find local k))))
+
 (defn all-map? [v]
   (and (sequential? v) (every? map? v)))
 
 (defn pullv
-  [global k v q opts]
+  [global [k v] q opts]
   (if (all-map? v)
       {k (mapv #(pull global % q opts) v)}
       [k (pull global v q opts)]))
@@ -40,15 +41,11 @@
 (defn join-prop
   [prop local global opts]
   (let [[k q] (first prop)]
-    (pullv global k (second (local-find local k opts)) q opts)))
+    (pullv global [k (second (local-find local k opts))] q opts)))
 
 (defn wildcard
-  [local opts]
-  (reduce-kv
-    (fn [acc k v]
-      (conj acc (local-find local k opts)))
-    {}
-    local))
+  [global ^java.util.Map local opts]
+  (pull global local (vec (.keySet local)) opts))
 
 (defn pull
   ([global local query {:keys [no-wildcard?] :as opts}]
@@ -57,13 +54,13 @@
                (= '* prop)
                (if no-wildcard?
                  acc
-                 (merge acc (wildcard local opts)))
+                 (merge acc (wildcard global local opts)))
 
                (or (string? prop) (keyword? prop))
                (if-let [[k v :as kv] (local-find local prop opts)]
                  (conj acc
                        (if (or (map? v) (all-map? v))
-                         [k (pull local v '[*] opts)]
+                         (pullv local kv '[*] opts)
                          (denormalize kv global)))
                  acc)
 
