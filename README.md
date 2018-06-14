@@ -1,5 +1,10 @@
 # pull
 
+[![Build Status](https://travis-ci.org/robertluo/pull.svg?branch=master)](https://travis-ci.org/robertluo/pull)
+[![Clojars Project](https://img.shields.io/clojars/v/robertluo/pull.svg)](https://clojars.org/robertluo/pull)
+
+Forked from JUXT pull.
+
 Clojure has powerful syntax for expressing nested data structures as trees.
 
 Trees are extremely useful for user-interfaces, configuration and data transfer (EDN, JSON and XML).
