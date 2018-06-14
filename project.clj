@@ -1,5 +1,6 @@
 (defproject robertluo/pull "0.2.1"
   :description "Trees from tables"
+  :min-lein-version "2.7.0"
   :url "http://github.com/juxt/pull"
   :license {:name "The MIT License"
             :url "http://opensource.org/licenses/MIT"}
