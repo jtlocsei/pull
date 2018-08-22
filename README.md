@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/robertluo/pull.svg?branch=master)](https://travis-ci.org/robertluo/pull)
 [![Clojars Project](https://img.shields.io/clojars/v/robertluo/pull.svg)](https://clojars.org/robertluo/pull)
+[![cljdoc badge](https://cljdoc.xyz/badge/robertluo/pull)](https://cljdoc.xyz/d/robertluo/pull/CURRENT)
 
 Forked from JUXT pull.
 
