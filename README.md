@@ -41,6 +41,10 @@ Get a result:
 {:name "pull" :vhosts {"http://localhost:8080" ["/" :abc]}}
 ```
 
+### Spec
+
+`juxt.pull.spec` contains specs for the API. you can require it if you want to check.
+
 ## Queries
 
 Queries a vectors, containing the entries you wish to pull out of the state.
@@ -101,6 +105,7 @@ Just like Datomic's pull API, you can use `'*` to get all attributes of a map. Y
 
 The MIT License (MIT)
 
+Copyright © 2018 Luo Tian
 Copyright © 2016 JUXT LTD.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:

@@ -3,7 +3,11 @@
 (ns juxt.pull.core-test
   (:require
    [clojure.test :refer :all]
-   [juxt.pull.core :refer :all]))
+   [juxt.pull.core :refer :all]
+   [juxt.pull.spec]
+   [clojure.spec.test.alpha :as stest]))
+
+(use-fixtures :once (fn [f] (stest/instrument) (f) (stest/unstrument)))
 
 (deftest pull-test
   (let [data {:name "pull"
@@ -72,4 +76,3 @@
            (pull {:docs [{:author "juxt" :password "secret"} {:author "renewdoit"}]}
                  [{:docs [:author :password]}]
                  {:stealth #{:password}})))))
-

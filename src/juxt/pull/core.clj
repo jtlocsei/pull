@@ -17,13 +17,11 @@
   all key inside stealth attributes set will not appeared in the
   returned data as if non-exists, perfectly for sensitive data."
   ([data query]
-   (pull data query nil))
+   (pull data query {}))
   ([data query
     {:keys [shadow stealth no-wildcard?]
      :or {shadow {}
           stealth #{}
           no-wildcard? false}
      :as opts}]
-   (when shadow (assert (map? shadow) (every? fn? (vals shadow))))
-   (when stealth (assert (set? stealth)))
    (impl/pull data data query opts)))

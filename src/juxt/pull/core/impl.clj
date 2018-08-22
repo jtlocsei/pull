@@ -24,7 +24,7 @@
 
 (defn local-find
   [local k {:keys [shadow stealth]}]
-  (when (not (get stealth k))
+  (when (not (get (set stealth) k))
     (if-let [shadow-fn (get shadow k)]
       [k (shadow-fn local)]
       (find local k))))
