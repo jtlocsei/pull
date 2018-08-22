@@ -4,7 +4,7 @@
 [![Clojars Project](https://img.shields.io/clojars/v/robertluo/pull.svg)](https://clojars.org/robertluo/pull)
 [![cljdoc badge](https://cljdoc.xyz/badge/robertluo/pull)](https://cljdoc.xyz/d/robertluo/pull/CURRENT)
 
-Forked from JUXT pull.
+> [Notice] Forked from JUXT pull. The maintainer does not respond with modification from me yet, however, 0.2.0 (which also submitted by me) has some inconsistent bugs and should be replaced by this library.
 
 Clojure has powerful syntax for expressing nested data structures as trees.
 
@@ -95,6 +95,27 @@ By defining stealth sets of keys, you can make some of the keys invisible.
 ## Wildcard
 
 Just like Datomic's pull API, you can use `'*` to get all attributes of a map. You can also turns it off by specific `:no-wildcard true` in the options map.
+
+## vs Datomic's pull API
+
+The most important difference of course is the library can be used on any map or maps, where Datomic's pull can only query `EntityMaps`.
+
+You can use either this library or Datomic's builtin Pull API if you want to pull Datomic entities. Considering following:
+
+ - Datomic's Pull has `:limit` feature for paging.
+ - Datomic's Pull has `:as` to rename attribute, `:default` for default value, which can achieve by a shadow attribute here.
+ - Datomic's Pull can not be exposed to external world, since it lacks feature such as `:no-wildcard`, `:shadow`, `:stealth`, which leaks the implementation details.
+
+
+You can use this library as an endpoint of a web service for any of your Datomic entities, providing pull options specified:
+
+   - disable wildcard by `:no-wildcard? true`
+   - hide internal attributes by adding them into `:stealth`
+   - use `:shadow` to introduce calculated attributes
+
+If you decide to do so, I suggest:
+
+ - return entities from Datomic queries rather than pull expressions in query only when you use the value internally.
 
 ## References
 
