@@ -2,6 +2,7 @@
 
 (ns ^:no-doc juxt.pull.core.impl
   (:require
+   [juxt.pull.protocol :as p]
    [clojure.walk :refer [postwalk]]))
 
 (defn- denormalize*
@@ -22,19 +23,21 @@
 
 (declare pull)
 
+(def findable? (partial satisfies? p/Findable))
+
 (defn local-find
   [local k {:keys [shadow stealth]}]
   (when (not (get (set stealth) k))
     (if-let [shadow-fn (get shadow k)]
       [k (shadow-fn local)]
-      (find local k))))
+      (p/-find local k))))
 
-(defn all-map? [v]
-  (and (seqable? v) (every? map? v)))
+(defn all-findable? [v]
+  (and (seqable? v) (every? findable? v)))
 
 (defn pullv
   [global [k v] q opts]
-  (if (all-map? v)
+  (if (all-findable? v)
       {k (mapv #(pull global % q opts) v)}
       [k (pull global v q opts)]))
 
@@ -44,8 +47,8 @@
     (pullv global (local-find local k opts) q opts)))
 
 (defn wildcard
-  [global ^java.util.Map local opts]
-  (pull global local (vec (.keySet local)) opts))
+  [global local opts]
+  (pull global local (vec (p/-keys local)) opts))
 
 (defn pull
   ([global local query {:keys [no-wildcard?] :as opts}]
@@ -59,7 +62,7 @@
                (or (string? prop) (keyword? prop))
                (if-let [[k v :as kv] (local-find local prop opts)]
                  (conj acc
-                       (if (or (map? v) (all-map? v))
+                       (if (all-findable? v)
                          (pullv local kv '[*] opts)
                          (denormalize kv global)))
                  acc)

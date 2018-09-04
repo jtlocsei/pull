@@ -5,7 +5,8 @@
    [clojure.test :refer :all]
    [juxt.pull.core :refer :all]
    [juxt.pull.spec]
-   [clojure.spec.test.alpha :as stest]))
+   [clojure.spec.test.alpha :as stest]
+   [juxt.pull.core.impl :as impl]))
 
 (use-fixtures :once (fn [f] (stest/instrument) (f) (stest/unstrument)))
 
@@ -77,9 +78,20 @@
                  [{:docs [:author :password]}]
                  {:stealth #{:password}})))))
 
-
 (deftest pull-in-set
   (testing "Set value can also be pulled"
     (is (= {:docs [{:author "bar"} {:author "foo"}]}
            (pull {:docs #{{:author "foo"} {:author "bar"}}}
                  [{:docs [:author]}])))))
+
+(deftest pull-datomic-entity
+  (testing "Datomic's Entity are also supported"
+    (let [entity (fn [m]
+                   (reify datomic.Entity
+                     (keySet [_]
+                       (.keySet m))
+                     (get [_ k]
+                       (.get m k))))
+          ent    {:docs [(entity {:author "foo"}) (entity {:author "bar"})]}]
+      (is (= {:docs [{:author "foo"} {:author "bar"}]}
+             (pull ent [{:docs [:author]}]))))))
