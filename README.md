@@ -117,6 +117,10 @@ If you decide to do so, I suggest:
 
  - return entities from Datomic queries rather than pull expressions in query only when you use the value internally.
 
+## Map-like data to be pulled
+
+The library not only support pull `java.util.Map` instance, it also support map-like data structures, like `datomic.Entity` (since it is an important scenario, the library has built-in support for it). You an adapt `juxt.pull.protocol/Findable` protocol to any data type.
+
 ## References
 
 - David Nolen's Euro Clojure talk in 2014 in Krakow.

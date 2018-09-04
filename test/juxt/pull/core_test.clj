@@ -5,8 +5,7 @@
    [clojure.test :refer :all]
    [juxt.pull.core :refer :all]
    [juxt.pull.spec]
-   [clojure.spec.test.alpha :as stest]
-   [juxt.pull.core.impl :as impl]))
+   [orchestra.spec.test :as stest]))
 
 (use-fixtures :once (fn [f] (stest/instrument) (f) (stest/unstrument)))
 

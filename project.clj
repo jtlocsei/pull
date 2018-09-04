@@ -1,4 +1,4 @@
-(defproject robertluo/pull "0.2.3"
+(defproject robertluo/pull "0.2.4"
   :description "Trees from tables"
   :min-lein-version "2.7.0"
   :url "http://github.com/juxt/pull"
@@ -7,4 +7,5 @@
   :dependencies [[org.clojure/clojure "1.9.0" :scope "provided"]]
   :profiles
   {:dev
-   {:dependencies [[com.datomic/datomic-free "0.9.5697"]]}})
+   {:dependencies [[com.datomic/datomic-free "0.9.5697"]
+                   [orchestra "2018.08.19-1"]]}})

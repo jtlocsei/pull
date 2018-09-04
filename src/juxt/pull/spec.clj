@@ -4,16 +4,15 @@
   notice ::key can be anything by default"
   (:require
    [clojure.spec.alpha :as s]
-   [juxt.pull.core :as core]))
+   [juxt.pull.core :as core]
+   [juxt.pull.protocol :as p]))
 
 (s/def ::key any?)
 (s/def ::pattern
   (s/coll-of (s/or :attr (s/or :keyword ::key :wildcard #{'*})
                    :join (s/map-of ::key ::pattern))))
 
-(s/def ::target
-  (s/or :map map?
-        :seq (s/coll-of map?)))
+(s/def ::target #(satisfies? p/Findable %))
 
 (s/def ::result ::target)
 
