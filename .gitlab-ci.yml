@@ -2,9 +2,4 @@ image: renewdoit/docker-clj-build:1.2.1
 
 build:
     script:
-    - mv .m2 ~/.m2
     - lein test
-    - mv ~/.m2 .m2
-    cache:
-      paths:
-      - .m2/
