@@ -30,7 +30,7 @@
       (find local k))))
 
 (defn all-map? [v]
-  (and (sequential? v) (every? map? v)))
+  (and (seqable? v) (every? map? v)))
 
 (defn pullv
   [global [k v] q opts]

@@ -76,3 +76,10 @@
            (pull {:docs [{:author "juxt" :password "secret"} {:author "renewdoit"}]}
                  [{:docs [:author :password]}]
                  {:stealth #{:password}})))))
+
+
+(deftest pull-in-set
+  (testing "Set value can also be pulled"
+    (is (= {:docs [{:author "bar"} {:author "foo"}]}
+           (pull {:docs #{{:author "foo"} {:author "bar"}}}
+                 [{:docs [:author]}])))))
