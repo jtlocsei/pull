@@ -3,3 +3,6 @@ image: renewdoit/docker-clj-build:1.2.1
 build:
     script:
     - lein test
+    cache:
+      paths:
+      - ~/.m2
