@@ -20,6 +20,8 @@
 (s/def ::stealth (s/coll-of ::key))
 (s/def ::shadow (s/map-of ::key fn?))
 (s/def ::pull-opts (s/keys :opt-un [::no-wildcard? ::stealth ::shadow]))
+
+;; API
 (s/fdef core/pull
   :args (s/cat :target ::target :pattern ::pattern :opts (s/? ::pull-opts))
   :ret ::result)
