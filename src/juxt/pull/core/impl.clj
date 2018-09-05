@@ -33,7 +33,7 @@
       (p/-find local k))))
 
 (defn all-findable? [v]
-  (and (seqable? v) (every? findable? v)))
+  (and v (seqable? v) (every? findable? v)))
 
 (defn pullv
   [global [k v] q opts]
@@ -52,23 +52,24 @@
 
 (defn pull
   ([global local query {:keys [no-wildcard?] :as opts}]
-   (reduce (fn [acc prop]
-             (cond
-               (= '* prop)
-               (if no-wildcard?
-                 acc
-                 (merge acc (wildcard global local opts)))
+   (when local
+     (reduce (fn [acc prop]
+               (cond
+                 (= '* prop)
+                 (if no-wildcard?
+                   acc
+                   (merge acc (wildcard global local opts)))
 
-               (or (string? prop) (keyword? prop))
-               (if-let [[k v :as kv] (local-find local prop opts)]
-                 (conj acc
-                       (if (all-findable? v)
-                         (pullv local kv '[*] opts)
-                         (denormalize kv global)))
-                 acc)
+                 (or (string? prop) (keyword? prop))
+                 (if-let [[k v :as kv] (local-find local prop opts)]
+                   (conj acc
+                         (if (all-findable? v)
+                           (pullv local kv '[*] opts)
+                           (denormalize kv global)))
+                   acc)
 
-               (join? prop)
-               (conj acc (join-prop prop local global opts))
-               :otherwise acc))
-           {}
-           query)))
+                 (join? prop)
+                 (conj acc (join-prop prop local global opts))
+                 :otherwise acc))
+             {}
+             query))))

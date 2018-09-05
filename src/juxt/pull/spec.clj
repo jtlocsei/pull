@@ -12,7 +12,7 @@
   (s/coll-of (s/or :attr (s/or :keyword ::key :wildcard #{'*})
                    :join (s/map-of ::key ::pattern))))
 
-(s/def ::target #(satisfies? p/Findable %))
+(s/def ::target (s/nilable #(satisfies? p/Findable %)))
 
 (s/def ::result ::target)
 

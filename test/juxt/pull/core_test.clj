@@ -94,3 +94,9 @@
           ent    {:docs [(entity {:author "foo"}) (entity {:author "bar"})]}]
       (is (= {:docs [{:author "foo"} {:author "bar"}]}
              (pull ent [{:docs [:author]}]))))))
+
+(deftest pull-on-nil-values
+  (is (= {:a nil} (pull {:a nil} [:a :b]))))
+
+(deftest pull-on-nil
+  (is (nil? (pull nil [:a]))))
