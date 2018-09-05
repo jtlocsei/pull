@@ -1,3 +1,4 @@
+;; Copyright © 2018, Luo Tian.
 ;; Copyright © 2016, JUXT LTD.
 
 (ns ^:no-doc juxt.pull.core.impl

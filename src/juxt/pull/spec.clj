@@ -1,13 +1,11 @@
 (ns juxt.pull.spec
-  "Spec for pull API.
-
-  notice ::key can be anything by default"
+  "Spec for pull API."
   (:require
    [clojure.spec.alpha :as s]
    [juxt.pull.core :as core]
    [juxt.pull.protocol :as p]))
 
-(s/def ::key any?)
+(s/def ::key (s/or :keyword keyword? :string string?))
 (s/def ::pattern
   (s/coll-of (s/or :attr (s/or :keyword ::key :wildcard #{'*})
                    :join (s/map-of ::key ::pattern))))

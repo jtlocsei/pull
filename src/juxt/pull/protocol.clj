@@ -27,7 +27,7 @@
   (extend-type datomic.Entity
     WildcardSupport
     (-keys [o]
-      (.keySet o))
+      (map keyword (.keySet o)))
     Findable
     (-find [o k]
       [k (.get o k)]))

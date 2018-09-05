@@ -95,8 +95,8 @@
                        (.keySet m))
                      (get [_ k]
                        (.get m k))))
-          ent    {:docs [(entity {:author "foo"}) (entity {:author "bar"})]}]
-      (is (= {:docs [{:author "foo"} {:author "bar"}]}
+          ent    {:docs [(entity {:author "foo"}) (entity {:author :bar})]}]
+      (is (= {:docs [{:author "foo"} {:author :bar}]}
              (pull ent [{:docs [:author]}]))))))
 
 (deftest pull-on-nil-values
