@@ -51,7 +51,7 @@
   (pull global local (vec (p/-keys local)) opts))
 
 (defn pull
-  ([global local query {:keys [no-wildcard?] :as opts}]
+  ([global local query {:keys [no-wildcard? no-ref?] :as opts}]
    (when local
      (reduce (fn [acc prop]
                (cond
@@ -65,7 +65,9 @@
                    (conj acc
                          (if (all-findable? v)
                            (pullv local kv '[*] opts)
-                           (denormalize kv global)))
+                           (if no-ref?
+                             kv
+                             (denormalize kv global))))
                    acc)
 
                  (join? prop)

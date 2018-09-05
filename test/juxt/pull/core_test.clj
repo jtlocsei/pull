@@ -26,6 +26,10 @@
       (is (= {:server {:port 8080, :vhosts [["/" :abc]]}}
              (pull data [:server]))))
 
+    (testing "Specify :no-ref option should not lookup ref"
+      (is (= {:server {:port 8080, :vhosts [[:vhosts "http://localhost:8080"]]}}
+             (pull data [:server] {:no-ref? true}))))
+
     (testing "maps"
       (is (= {:vhosts {"http://localhost:8080" ["/" :abc]}}
              (pull data [{:vhosts ["http://localhost:8080"]}]))))
@@ -96,7 +100,9 @@
              (pull ent [{:docs [:author]}]))))))
 
 (deftest pull-on-nil-values
-  (is (= {:a nil} (pull {:a nil} [:a :b]))))
+  (testing "For nil valued attribute should pulled as nil"
+    (is (= {:a nil} (pull {:a nil} [:a :b])))))
 
 (deftest pull-on-nil
-  (is (nil? (pull nil [:a]))))
+  (testing "Pull on nil just returns nil"
+    (is (nil? (pull nil [:a])))))

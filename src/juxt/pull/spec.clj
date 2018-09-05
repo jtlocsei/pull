@@ -17,9 +17,10 @@
 (s/def ::result ::target)
 
 (s/def ::no-wildcard? boolean?)
+(s/def ::no-ref? boolean?)
 (s/def ::stealth (s/coll-of ::key))
 (s/def ::shadow (s/map-of ::key fn?))
-(s/def ::pull-opts (s/keys :opt-un [::no-wildcard? ::stealth ::shadow]))
+(s/def ::pull-opts (s/keys :opt-un [::no-wildcard? ::stealth ::shadow ::no-ref?]))
 
 ;; API
 (s/fdef core/pull

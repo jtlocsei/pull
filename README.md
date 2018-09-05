@@ -54,6 +54,8 @@ Queries a vectors, containing the entries you wish to pull out of the state.
 
 Note that the state contains references, indicated with the metadata tag `^:ref`. These are similar to Datomic lookup-refs or Om Next's idents. These references are vectors corresponding to the path you might use in a `get-in` function to access other parts of the state.
 
+> From version 0.2.6, this behavior can be disabled by pull option `:no-ref? true`, which will speed things up if you do not need them.
+
 ## Joins
 
 Joins (sub-queries) are also supported by providing a map in place of a keyword in a query.
@@ -110,6 +112,7 @@ You can use either this library or Datomic's builtin Pull API if you want to pul
 You can use this library as an endpoint of a web service for any of your Datomic entities, providing pull options specified:
 
    - disable wildcard by `:no-wildcard? true`
+   - disable ref lookup by `:no-ref? true`
    - hide internal attributes by adding them into `:stealth`
    - use `:shadow` to introduce calculated attributes
 
