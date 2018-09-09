@@ -30,5 +30,6 @@
       (map keyword (.keySet o)))
     Findable
     (-find [o k]
-      [k (.get o k)]))
+      (when-let [v (.get o k)]
+        [k v])))
   (catch ClassNotFoundException _))
