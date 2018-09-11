@@ -24,7 +24,7 @@
 
 (try
   (import '[datomic Entity])
-  (extend-type datomic.Entity
+  (extend-type (Class/forName "datomic.Entity")
     WildcardSupport
     (-keys [o]
       (map keyword (.keySet o)))
