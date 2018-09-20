@@ -96,7 +96,7 @@ By defining stealth sets of keys, you can make some of the keys invisible.
 
 ## Wildcard
 
-Just like Datomic's pull API, you can use `'*` to get all attributes of a map. You can also turns it off by specific `:no-wildcard true` in the options map.
+Just like Datomic's pull API, you can use `'*` to get all attributes of a map. You can also turns it off by specific `:no-wildcard? true` in the options map.
 
 ## vs Datomic's pull API
 
