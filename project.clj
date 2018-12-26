@@ -1,4 +1,4 @@
-(defproject robertluo/pull "0.2.9"
+(defproject robertluo/pull "0.2.10"
   :description "Trees from tables"
   :min-lein-version "2.7.0"
   :url "http://github.com/robertluo/pull"

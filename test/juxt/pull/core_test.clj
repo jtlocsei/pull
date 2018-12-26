@@ -106,3 +106,16 @@
 (deftest pull-on-nil
   (testing "Pull on nil just returns nil"
     (is (nil? (pull nil [:a])))))
+
+(deftest pull-not-add-nil-key
+  (testing "Pull on map collections should not add nil key"
+    (is (= {:a 1
+            :c [{:type :wuxing :amount 100}
+                {:type :seed :seed {:id "111"}}]}
+           (pull {:a 1
+                  :c [{:type   :wuxing
+                       :amount 100}
+                      {:type :seed
+                       :seed {:id "111"}}]}
+                 [:a {:c [:type :amount
+                          {:seed [:id]}]}])))))

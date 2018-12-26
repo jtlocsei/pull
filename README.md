@@ -65,7 +65,7 @@ Joins (sub-queries) are also supported by providing a map in place of a keyword 
 If a value is a sequence (sequential?) of map, query inside will return a vector of values, just like in Datomic's pull api.
 
 ```clojure
-(pull {:person/name "Joe" :person/childen [{:person/name "Bob"} {:person/name "Alice"}]}
+(pull {:person/name "Joe" :person/children [{:person/name "Bob"} {:person/name "Alice"}]}
       [:person/name {:person/children [:person/name]}])
 
 ;;=> {:person/name "Joe" :person/children [{:person/name "Bod"} {:person/name "Alice"}]}
@@ -76,7 +76,7 @@ If a value is a sequence (sequential?) of map, query inside will return a vector
 You can define attributes (values) not exists but calculated by the value of the map, they are shadow attributes:
 
 ```clojure
-(pull {:person/name "Joe" :person/childen [{:person/name "Bob"} {:person/name "Alice"}]}
+(pull {:person/name "Joe" :person/children [{:person/name "Bob"} {:person/name "Alice"}]}
       [:person/name :person/num-kids]
       {:shadow {:person/num-kids #(-> % :person/children count)}})
 
