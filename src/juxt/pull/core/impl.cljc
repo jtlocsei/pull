@@ -24,7 +24,7 @@
 
 (declare pull)
 
-(def findable? (partial satisfies? p/Findable))
+(def findable? #(satisfies? p/Findable %))
 
 (defn local-find
   [local k {:keys [shadow stealth]}]
