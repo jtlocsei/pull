@@ -4,8 +4,6 @@
 [![Clojars Project](https://img.shields.io/clojars/v/robertluo/pull.svg)](https://clojars.org/robertluo/pull)
 [![cljdoc badge](https://cljdoc.xyz/badge/robertluo/pull)](https://cljdoc.xyz/d/robertluo/pull/CURRENT)
 
-> [Notice] Forked from JUXT pull. The maintainer does not respond with modification from me yet, however, 0.2.0 (which also submitted by me) has some inconsistent bugs and should be replaced by this library.
-
 Clojure has powerful syntax for expressing nested data structures as trees.
 
 Trees are extremely useful for user-interfaces, configuration and data transfer (EDN, JSON and XML).
